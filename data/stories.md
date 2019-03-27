@@ -13,7 +13,8 @@
 ## story 04
 * inform
     - action_weather
-    ## Generated Story -5524800236273680502
+    
+## Generated Story -5524800236273680502
 * greet
     - utter_greet
 * greet
@@ -125,6 +126,7 @@
    - action_weather
 * goodbye
    - utter_goodbye 
+
 ## story_003
 * greet
    - utter_greet
