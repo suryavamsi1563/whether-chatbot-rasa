@@ -1,6 +1,7 @@
 {
   "states": [
-    "intent_goodbye",
+    "intent_bye",
+    "intent_entered_location",
     "intent_greet",
     "intent_inform",
     "entity_location",
@@ -12,9 +13,15 @@
     "prev_action_revert_fallback_events",
     "prev_action_default_ask_affirmation",
     "prev_action_default_ask_rephrase",
-    "prev_utter_greet",
-    "prev_utter_goodbye",
+    "prev_action_back",
     "prev_utter_ask_location",
-    "prev_action_weather"
+    "prev_utter_ask_whatspossible",
+    "prev_utter_okay",
+    "prev_utter_greet",
+    "prev_utter_ask_whoisit",
+    "prev_utter_goodbye",
+    "prev_utter_do",
+    "prev_weather_form",
+    "active_form_weather_form"
   ]
 }

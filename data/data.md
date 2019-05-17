@@ -1,0 +1,130 @@
+## intent:bye
+- goodbye
+- goodnight
+- good bye
+- good night
+- see ya
+- toodle-oo
+- bye bye
+- gotta go
+- farewell
+- catch you later
+- bye for now
+- bye was nice talking to you
+- bye bye bot
+- bye bot
+- k byyye
+- tlak to you later
+- ciao
+- Bye bye
+- then bye
+- bye!
+- bye
+- take care
+- see ya
+- goodbye
+- later
+- see you later
+- thanks
+- bye
+- bye
+
+## intent:entered_location
+- London
+- Lithuania
+- Italy
+- Dublin
+- Amsterdam
+- Barcelona
+- Vilnius
+- Hyderabad
+- Delhi
+- Bangalore
+- jaipur
+- Paris
+- Berlin
+
+## intent:greet
+- whats up
+- hi friend
+- hey bot!
+- yo
+- yoo
+- heeey
+- hii
+- hi there it's me
+- hiihihi
+- hi Mister
+- hello friend
+- Hallo
+- hi?
+- Hei
+- hey there
+- jop
+- Well hello there ;)
+- hello everybody
+- hey dude
+- hi
+- Hi bot
+- hello robot
+- hi hi
+- hello there
+- good morning
+- heyo
+- Whats Up
+- hallo
+- Hellllooooooo
+- Hey bot
+- hey
+- Heya
+- heya
+- helloooo
+- hi again
+- I said, helllllloooooO!!!!
+- Hello
+- Hi
+- Whats up my bot
+- Hey
+- hey bot
+- Good morning
+- good evening
+- jojojo
+- hiii
+- hello is anybody there
+- good afternoon
+- howdy
+- hello?
+- hi there
+- hello
+- hey hey
+- heyho
+- hey let's talk
+- what up
+- greetings
+- hola
+- hii- hi pal!
+- hello sweet boy
+- hey, let's talk
+- hellooo
+- hello it is me again
+- hello sweatheart
+- hi
+- init
+
+## intent:inform
+- What's the weather today?
+- What's the weather in [London](location) today?
+- Show me what's the weather in [Paris](location)
+- I wonder what is the weather in [Vilnius](location) right now?
+- what is the weather?
+- Tell me the weather
+- Is the weather nice in [Barcelona](location) today?
+- I am going to [London](location) today and I wonder what is the weather out there?
+- I am planning my trip to [Amsterdam](location). What is the weather out there?
+- Show me the weather in [Dublin](location), please
+- Tell me the weather in [Vilnius](location)
+- The weather condition in [Italy](location)
+- can you tell me the weather in [hyderabad](location)
+- help me with the weather in [jaipur](location)
+- tell me weather in [new york](location)
+- tell me weather in [bangalore](location)

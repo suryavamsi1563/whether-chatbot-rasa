@@ -1,0 +1,2 @@
+model_checkpoint_path: "C:\\Users\\suryavamsib\\Desktop\\Deploy wether bot\\models\\default\\expensebot\\component_5_EmbeddingIntentClassifier.ckpt"
+all_model_checkpoint_paths: "C:\\Users\\suryavamsib\\Desktop\\Deploy wether bot\\models\\default\\expensebot\\component_5_EmbeddingIntentClassifier.ckpt"

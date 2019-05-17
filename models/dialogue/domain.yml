@@ -1,35 +1,61 @@
 %YAML 1.1
 ---
 actions:
-- utter_greet
-- utter_goodbye
 - utter_ask_location
-- action_weather
+- utter_ask_whatspossible
+- utter_okay
+- utter_greet
+- utter_ask_whoisit
+- utter_goodbye
+- utter_do
 config:
   store_entities_as_slots: true
 entities:
 - location
-forms: []
+forms:
+- weather_form
 intents:
+- inform:
+    use_entities: true
+- bye:
+    use_entities: true
 - greet:
     use_entities: true
-- goodbye:
-    use_entities: true
-- inform:
+- entered_location:
     use_entities: true
 slots:
   location:
     auto_fill: true
     initial_value: null
     type: rasa_core.slots.TextSlot
+  requested_slot:
+    auto_fill: true
+    initial_value: null
+    type: rasa_core.slots.UnfeaturizedSlot
 templates:
   utter_ask_location:
-  - text: In what location ?
-  - text: Can you give me the location ?
+  - text: I didnt get the location. Can you enter it.
+  utter_ask_whatspossible:
+  - text: You can ask me about weather information anywhere around the world.Thats
+      supercool right!!!
+  - text: I can give you the weather for any city or place around the world.Try me!!
+  utter_ask_whoisit:
+  - text: I'm the super duper weather bot!
+  - text: I am the  weather bot dude.
+  - text: Iam your great great grandfather who can say about the weather anywhere...!!!
+  utter_default:
+  - text: I couldnt understand you.Can you rephrase it.
+  - text: I didnt get that. Can you express differently
+  - text: Sorry. I did'nt understand.Can you please elaborate
+  utter_do:
+  - text: What can I do for you?
+  - text: Tell me what to do !!
+  - text: How can i help you.
   utter_goodbye:
-  - text: Talk to you later
-  - text: Bye.Nice talking to you.
-  - text: Bye Bye
-  - text: Good bye.
+  - text: Bye.Take Care
+  - text: See ya dude
+  - text: I am also leaving....bye!!
   utter_greet:
-  - text: Hello! How can I help ?
+  - text: Hey there!
+  - text: Hi bro , Iam at your command
+  - text: Whats up

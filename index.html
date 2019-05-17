@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/botui/build/botui.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/botui/build/botui-theme-default.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
+    <script src="https://unpkg.com/botui/build/botui.min.js"></script>
+    <style>
+    a{
+        color: black;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rasa Expense Bot</h1>
+        <div class="row">
+            <div class="col-md-8" id="my-botui-app">
+                <bot-ui></botui>
+            </div>
+        </div>
+        <div  class="row">
+            <div class="col-md-8" style="display:block;">
+                <input class="form-control" type="text" name="entered" id="entered" placeholder="Enter here"> <button class="btn btn-primary btn mt-3" type="submit">Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    "use strict";
+    var botui = new BotUI('my-botui-app');
+    var print_data = ""
+    var entered_data = ""
+    var user_credentials = {}
+    var link
+    var arr
+    var outdata
+    var outdata_array
+    function success_func(msg){
+        console.log("Inside the success_func call")
+        console.log(msg)
+            msg.forEach(function(element) {
+                outdata = element.text
+                if (element.hasOwnProperty("buttons")) {
+                    element.buttons.forEach(function(button){
+                        if (button.title == "No Receipt" ){
+                            outdata += "<br><button onclick='chat_button(this.id)' class = 'btn btn-sm btn-danger mt-3 chat_btn' id = '" + button.payload +"'>"+ button.title  +"</button>"
+                        } else {
+                            outdata += "<br><button onclick='chat_button(this.id)' class = 'btn btn-sm btn-primary mt-3 chat_btn' id = '" + button.payload +"'>"+ button.title  +"</button>"
+                        }
+                    })
+                }
+                else if (IsJsonString(outdata)){
+                    var json_data = JSON.parse(outdata)
+                    // if (json_data.length > 1){
+                    //     outdata = "Total their are " + json_data.length +  " pending reports as follows: <br><br>"
+                    // } else {
+                    //     outdata = "There is " + json_data.length +  " pending report as follows: <br><br>"
+                    // }
+                    console.log(json_data)
+                    outdata = ""
+                    console.log ("Is json string")
+                    
+                    if (typeof(json_data) == 'object') {
+                        if (json_data['goto']){
+                            outdata = "Redirecting to " + json_data['goto'] + "..."
+                        } else {
+                            for (var i = 0; i < json_data.length; i++){
+                                outdata += (i+1).toString() + ').' + "<a href = '#' onclick='select_report(" + i + ")' >" + json_data[i].bodytext + "</a>" + "<br />"
+                            }
+                            outdata += "<br/>Click on the report for summary"
+                        }
+                    }
+                }
+                else if(outdata.includes('@#$')){
+                    if (outdata.includes("https:")){
+                        outdata_array = outdata.split('@#$')
+                        link = outdata_array[outdata_array.length - 1]
+                        outdata = outdata_array.slice(0,outdata_array.length - 2).join('<br/>')
+                        outdata = outdata + "</br></br><a class = 'btn btn-sm btn-success' href = '" + link +"'>learn more</a>"
+                    }
+                    else {
+                        outdata = outdata.split('@#$').join('<br/>')
+                    }
+                }
+                botui.message.add({
+                    content: outdata
+                });              
+            });
+    }
+
+    $(document).ready(function() {
+        var data = "/init"
+        user_credentials = {userid:9364,compid:1403,approver:"Yes"}
+        arr = { sender: user_credentials, message: data}
+        console.log("Sending init")
+        $.ajax({
+            type: "POST",
+            url: 'http://localhost:5005/webhooks/rest/webhook',
+            data: JSON.stringify(arr),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (msg) {
+                console.log(msg)
+                success_func(msg)
+        },
+            fail: function(xhr, textStatus, errorThrown){
+            alert('request failed');
+            }
+            })
+        });
+
+
+    function IsJsonString(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    function select_report(i){
+        var data = ""
+        if (i ==0){
+            data = "first"
+        } else if (i == 1) {
+            data = "second"
+        } else if (i == 2) {
+            data = "third"
+        }
+        botui.message.add({
+            human: true,
+            content: data
+        });
+        console.log("Sending selection report: ")
+        user_credentials = {userid:9364,compid:1403,approver:"Yes"}
+        arr = { sender: user_credentials, message: data}
+        $.ajax({
+        type: "POST",
+        url: 'http://localhost:5005/webhooks/rest/webhook',
+        data: JSON.stringify(arr),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (msg) {
+            console.log("before the call of fucntion")
+            console.log(msg)
+            console.log(data)
+            success_func(msg)
+        },
+        fail: function(xhr, textStatus, errorThrown){
+          alert('request failed');
+        }
+    })
+    }
+
+    function chat_button(payload){
+        console.log(payload)
+        if (payload.includes('no_more_receipts')){
+            var mid_data = payload.replace('/choose{"no_more_receipts":"','')
+            mid_data = mid_data.replace('"}','')
+            console.log(mid_data)
+            var data = "";
+            if (mid_data == "camera"){
+                data = "Open Camera"
+            } else if (mid_data == "attach"){
+                data = "Attach Receipt"
+            } else if (mid_data == "No"){
+                data = "No Receipt"
+            } else if (mid_data == "/affirm"){
+                data = "Yes"
+            } else {
+                data = "No"
+            }
+        }  
+        else if(payload.includes('addlineitem')) {
+            var mid_data = payload.replace('/addlineitem{"navto":"','')
+            mid_data = mid_data.replace('"}','')
+            console.log(mid_data)
+            if (mid_data == "camera"){
+                data = "Adding line item from Camera"
+            } else if (mid_data == "summary"){
+                data = "Add line item"
+            } else if (mid_data == "receipt"){
+                data = "Add line item from receipt"
+            } else if (mid_data == "transaction"){
+                data = "Add line item through transactions"
+            }
+        }
+        else if (payload.includes('appr_or_rej')) {
+            if (payload.includes('approve')){
+                data = 'Approve'
+            } else if (payload.includes('reject')){
+                data = "Reject"
+            } else {
+                data = "later"
+            }
+        } 
+        else if (payload.includes('go_to_approvals')){
+            data = "Go to approvals"
+        }
+        else if (payload.includes('go_to_pendingreports')){
+            data = "Go to pending reports"
+        }
+        else if (payload.includes('adlt_or_sub')){
+            if (payload.includes('addlineitem')){
+                data = "Add line item"
+            } else{
+                data = "Submit the report"
+            }
+        }
+        else if (payload.includes('/affirm')){
+            data = "Yes"
+        }
+        else if (payload.includes('/deny')){
+            data = "No"
+        }
+        console.log(data)
+        botui.message.add({
+            human: true,
+            content: data
+        });
+        user_credentials = {userid:9364,compid:1403,approver:"Yes"}
+        arr = { sender: user_credentials, message:payload}
+        $.ajax({
+        type: "POST",
+        url: 'http://localhost:5005/webhooks/rest/webhook',
+        data: JSON.stringify(arr),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (msg) {
+            console.log(msg)
+            msg.forEach(function(element) {
+                outdata = element.text
+                if (element.hasOwnProperty("buttons")) {
+                    element.buttons.forEach(function(button){
+                        if (button.title == "No Receipt" ){
+                            outdata += "<button onclick='chat_button(this.id)' class = 'btn btn-sm btn-danger mt-3 chat_btn' id = '" + button.payload +"'>"+ button.title  +"</button>"
+                        } else {
+                            outdata += "<button onclick='chat_button(this.id)' class = 'btn btn-sm btn-primary mt-3 chat_btn' id = '" + button.payload +"'>"+ button.title  +"</button>"
+                        }
+                    })
+                }
+                if (IsJsonString(outdata)){
+                    var json_data = JSON.parse(outdata)
+                    // if (json_data.length > 1){
+                    //     outdata = "Total their are " + json_data.length +  " pending reports as follows: <br><br>"
+                    // } else {
+                    //     outdata = "There is " + json_data.length +  " pending report as follows: <br><br>"
+                    // }
+                    outdata = ""
+                    if (typeof(json_data) == 'object') {
+                        if (json_data['goto']){
+                            outdata = "Redirecting to " + json_data['goto'] + "..."
+                        } else {
+                            for (var i = 0; i < json_data.length; i++){
+                                outdata += (i+1).toString() + ').' + "<a href = '#' onclick='select_report(" + i + ")' >" + json_data[i].bodytext + "</a>" + "<br />"
+                            }
+                            outdata += "<br/>Click on the report for summary"
+                        }
+                    }
+                }
+                botui.message.add({
+                    content: outdata
+                }); 
+            })
+        },
+        fail: function(xhr, textStatus, errorThrown){
+          alert('request failed');
+        }
+    })
+}
+
+    $("button").click(function(){
+        entered_data = $("#entered").val()
+        botui.message.add({
+            human: true,
+            content: entered_data
+        });
+        user_credentials = {userid:9364,compid:1403,approver:"Yes"}
+        $("#entered").val("")
+        arr = { sender: user_credentials, message:entered_data}
+        $.ajax({
+        type: "POST",
+        url: 'http://localhost:5005/webhooks/rest/webhook',
+        data: JSON.stringify(arr),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (msg) {
+            success_func(msg)
+        },
+
+
+        //     console.log(msg.length)
+        //     for (x = 0,)
+        //     console.log(msg)
+        //     outdata = msg["0"].text
+        //     if (outdata.startsWith("Total their are")){
+        //         outdata = outdata.split("@#$").join("<br />")
+        //     }
+        //     console.log(outdata)
+        //   botui.message.add({
+        //     content: outdata
+        // });
+        // },
+
+        
+        fail: function(xhr, textStatus, errorThrown){
+          alert('request failed');
+        }
+      });
+    });
+
+</script>
+</html>
